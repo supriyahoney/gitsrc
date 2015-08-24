@@ -1,0 +1,437 @@
+#%RAML 0.8
+title: CISCO-SDN API
+version: 1.0.0 development
+baseUri: http://www.cisco.com/api
+schemas: 
+  - admitReq: !include schema/AdmitDemandRequest.schema
+  - demandsReq: !include schema/GetDemandNodetoNodeRequest.schema
+  - getCustomerReq: !include schema/GetCustomerDetailsReq.schema
+  #- calendarDemandNodetoNodeReq: !include schema/Cal_GetDemandNodetoNodeRequest.schema
+  - calendarQueryNodetoNodeReq: !include schema/Cal_QueryNodetoNodeRequest.schema
+  - calendarAdmitReq: !include schema/Cal_AdmitRequest.schema
+  - calendarCancelDemandReq: !include schema/Cal_CancelRequest.schema
+  - calendarUpdateDemandReq: !include schema/Cal_UpdateRequest.schema
+/GetAllNodes :
+  displayName: GetAllNodes
+  description: The GetAllNodes API returns all the network nodes.
+  get:
+    description: To get the list of all network nodes.
+    responses:
+      200 : 
+        body:
+          application/json:
+            example: !include json/GetAllNodesRes.json
+      404 :
+        body:          
+          application/json:
+            example: !include json/error-404.json
+      500 :
+        body:
+          application/json:
+            example:  !include json/error-500.json
+  /GetAllNodesById:
+    displayName: GetAllNodesbyId
+    description: To get the list of all network nodes.
+    get:  
+      description: To get the list of all network nodes.
+      responses:
+        200 : 
+          body:
+            application/json:
+              example: !include json/GetAllNodesByIdRes.json
+        404 :
+          body:          
+            application/json:
+              example: !include json/error-404.json
+        500 :
+          body:
+            application/json:
+              example:  !include json/error-500.json
+  /edgeNodes:
+    displayName: GetAllEdgeNodes
+    description: To get the list of all network edge nodes.
+    get:  
+      description: To get the list of all network edge nodes.
+      responses:
+        200 : 
+          body:
+            application/json:
+              example: !include json/GetAllEdgeNodesRes.json
+        404 :
+          body:          
+            application/json:
+              example: !include json/error-404.json
+        500 :
+          body:
+            application/json:
+              example:  !include json/error-500.json  
+              
+/GetDemandNodetoNode :
+  displayName: GetAllDemandsFromNodetoNode
+  description: The GetAllDemandsFromNodetoNode API returns the demand details for the   requested time interval and destination points.
+  post:
+    description: To get the demand based on interval, source and destination.
+    body:
+      application/json:
+        schema: demandsReq      
+        example: !include json/GetDemandNodetoNodeReq.json
+    responses:
+      200 :
+        body:
+          application/json:
+            example: !include json/GetDemandNodetoNodeResp-200.json
+      404 :
+        body:          
+          application/json:
+            example: !include json/error-404.json
+      500 :
+        body:
+          application/json:
+            example: !include json/error-500.json         
+/AdmitDemandRequest :
+  displayName: AdmitDemandRequest
+  description: The AdmitDemandRequest API will set the demand for the given request.
+  post:
+    description: To admit a new demand request.
+    body:
+      application/json:
+        schema : admitReq
+        example : !include json/AdmitDemandRequest.json
+    responses:
+      200 :
+        body:
+          application/json:
+            example: !include json/AdmitDemandRequestResp-200.json
+      404 :
+        body:          
+          application/json:
+            example: !include json/error-404.json  
+      500 :
+        body:
+          application/json:
+            example: !include json/error-500.json
+/Customer :
+  /GetCustomerDetails :
+    displayName: GetCustomerdetails
+    description: The Customer API will get the customer details for the given request.
+    post:
+      description: To get the customer details from the CRM system.
+      body:
+        application/json:
+          schema: getCustomerReq
+          example:  !include json/Customer_GetCustomerDetailsReq.json
+      responses:
+        200 :
+          body:
+            application/json:
+              example: !include json/Customer_GetCustomerDetailsRes.json
+        404 :
+          body:          
+            application/json:
+              example: !include json/error-404.json  
+        500 :
+          body:
+            application/json:
+              example: !include json/error-500.json
+  /GetVRFDetails:
+    post:
+      description: Service to get the VRF details associated for a particular customer.
+      body:
+        application/json: 
+          schema: !include schema/GetVRFDetailsReq.schema
+          example: !include json/GetVRFDetailsReq.json
+      responses: 
+        200:
+          body: 
+            application/json: 
+              example: !include json/GetVRFDetailsRes.json
+        404 :
+          body:          
+            application/json:
+              example: !include json/error-404.json  
+        500 :
+          body:
+            application/json:
+              example: !include json/error-500.json
+      
+/Calendared :
+  /BW :
+    /QueryNodetoNode :
+      displayName: QueryNodetoNode
+      description: To check requested bandwidth provisonement for future.
+      post:
+        body:
+          application/json:
+            schema : calendarQueryNodetoNodeReq
+            example: !include json/Cal_QueryNodetoNodeReq.json
+            #schema : calendarDemandNodetoNodeReq
+            #example: !include json/Cal_GetDemandNodetoNodeReq.json
+            
+        responses: 
+          200:
+            body:
+              application/json: 
+                example: !include json/Cal_QueryNodetoNodeRes.json
+                #example: !include json/Cal_GetDemandNodetoNodeRes.json
+          404 :
+            body:          
+              application/json:
+                example: !include json/error-404.json  
+          500 :
+            body:
+              application/json:
+                example: !include json/error-500.json
+    /GetProjectionTimeInterval:
+      displayName: GetProjectionTimeInterval
+      description: Getting projection time interval
+      get:
+        responses: 
+          200:
+            body:
+              application/json: 
+                example: !include json/Cal_GetProjectionTimeIntervalResp.json
+          404 :
+            body:          
+              application/json:
+                example: !include json/error-404.json  
+          500 :
+            body:
+              application/json:
+                example: !include json/error-500.json
+    /AdmitRequest:
+      displayName: Admit Request
+      description: Admitting the customer request
+      post: 
+        body: 
+          application/json: 
+            schema: calendarAdmitReq
+            example: !include json/Cal_AdmitReq.json
+        responses:
+          200:
+            body:
+              application/json: 
+                example: !include json/Cal_AdmitRes.json
+          404 :
+            body:          
+              application/json:
+                example: !include json/error-404.json  
+          500 :
+            body:
+              application/json:
+                example: !include json/error-500.json
+    /GetDemandsInSpanNodetoNode:
+     displayName: GetDemandsInSpanNodetoNode
+     description: get all demands with in span based on timeinterval
+     post:
+      body:
+       application/json:
+        schema: !include schema/Cal_GetDemandsInSpanNodetoNodeRequest.schema
+        example: !include json/Cal_GetDemandsInSpanNodetoNodeReq.json
+      responses:
+       200:
+        body:
+         application/json:
+          example: !include json/Cal_GetDemandsInSpanNodetoNodeRes.json
+       404:
+        body:
+         application/json:
+          example: !include json/error-404.json  
+       500:
+        body:
+         application/json:
+          example: !include json/error-500.json
+       
+    /CancelRequest:
+      displayName: CancelRequest
+      #displayName: CancelDemandRequest
+      description: Cancel the customer specific request
+      post:
+        body:
+         application/json:
+          #schema: !include schema/Cal_CancelDemandRequest.schema
+          #example: !include json/Cal_CancelDemandReq.json
+          schema: !include schema/Cal_CancelRequest.schema
+          example: !include json/Cal_CancelRequest.json
+        responses:
+         200:
+          body:
+           application/json:
+            #example: !include json/Cal_CancelDemandRes.json
+            example: !include json/Cal_CancelRequestRes.json
+         404:
+          body:
+           application/json:
+            example: !include json/error-404.json  
+         500:
+          body:
+           application/json:
+            example: !include json/error-500.json
+           
+    /UpdateRequest:
+      displayName: UpdateRequest
+      #displayName: UpdateDemandRequest
+      description: Update the customer specific demand request
+      post:
+        body:
+         application/json:
+          #schema: !include schema/Cal_UpdateDemandRequest.schema
+          #example: !include json/Cal_UpdateDemandReq.json
+          schema: !include schema/Cal_UpdateRequest.schema
+          example: !include json/Cal_UpdateRequest.json
+        responses:
+         200:
+          body:
+           application/json:
+            #example: !include json/Cal_UpdateDemandRes.json
+            example: !include json/Cal_UpdateRequestRes.json
+         404:
+          body:
+           application/json:
+            example: !include json/error-404.json  
+         500:
+          body:
+           application/json:
+            example: !include json/error-500.json
+            
+    /GetAllRequests:
+      displayName: GetAllRequests
+      description: Getting all requests of a customer
+      #displayName: GetAllDemandsStatus
+      #description: Getting all demands of a customer
+      post:
+        body:
+         application/json:
+          schema: !include schema/Cal_GetAllRequests.schema
+          example: !include json/Cal_GetAllRequests.json
+          #schema: !include schema/Cal_GetAllDemandsStatusRequest.schema
+          #example: !include json/Cal_GetAllCustomerDemandReq.json
+          
+        responses:
+         200:
+          body:
+           application/json:
+            example: !include json/Cal_GetAllRequestsRes.json
+            #example: !include json/Cal_GetAllCustomerDemandRes.json
+            
+         404:
+          body:
+           application/json:
+            example: !include json/error-404.json  
+         500:
+          body:
+           application/json:
+            example: !include json/error-500.json        
+            
+    /GetRequestDetails:
+      displayName: GetRequestDetails
+      description: Getting demand by request id of customer
+      #displayName: GetDemandStatusByReqID
+      #description: Getting request details by request id of customer
+      post:
+        body:
+         application/json:
+          schema: !include schema/Cal_GetRequestDetailsReq.schema
+          example: !include json/Cal_GetRequestDetailsReq.json
+          #schema: !include schema/Cal_GetDemandStatusByReqIDRequest.schema
+          #example: !include json/Cal_GetCustomerDemandDetailsReq.json
+        responses:
+         200:
+          body:
+           application/json:
+            example: !include json/Cal_GetRequestDetailsRes.json
+            #example: !include json/Cal_GetCustomerDemandDetailsRes.json
+            
+         404:
+          body:
+           application/json:
+            example: !include json/error-404.json  
+         500:
+          body:
+           application/json:
+            example: !include json/error-500.json
+    /PeakHours:
+      displayName: PeakHours
+      description: Service to get the peak and off peak hours for given time period.
+      post:
+        body: 
+          application/json: 
+            schema: !include schema/Cal_PeakHoursReq.schema
+            example: !include json/Cal_PeakHoursReq.json
+        responses: 
+          200: 
+            body: 
+              application/json: 
+                example: !include json/Cal_PeakHoursRes.json
+          404:
+            body:
+              application/json:
+                example: !include json/error-404.json  
+          500:
+            body:
+              application/json:
+                example: !include json/error-500.json
+    /ClearStageplan :
+      displayName: ClearStageplan
+      description: Service to clear the existing RSID TSID 
+      post: 
+        body: 
+          application/json: 
+            schema: !include schema/Cal_ClearStageplanRequest.schema
+            example: !include json/Cal_ClearStageplanReq.json
+        responses: 
+          200:
+            body: 
+              application/json: 
+                example: !include json/Cal_ClearStageplanRes.json
+          404:
+              body:
+                application/json:
+                  example: !include json/error-404.json  
+          500:
+            body:
+              application/json:
+                example: !include json/error-500.json
+    /AdmitVRFInfo:
+      displayName: VRF_Steer
+      description: Service which will persist the VRF Steer details.
+      post:
+        body:
+          application/json:
+            schema: !include schema/VRF_Steer.schema
+            example: !include json/Cal_VRF_Steer_Req.json
+        responses: 
+          200:
+            body: 
+              application/json: 
+                example: !include json/Cal_VRF_Steer_Resp.json
+          400:
+            body:
+              application/json: 
+                example: !include json/error-404.json
+          500:
+            body: 
+              application/json: 
+                example: !include json/error-500.json            
+/Triggered:
+  /QueryLSP:
+    displayName: QueryLSP
+    description: Service which will query LSP betwen 2 edge nodes this will create a new if it is not available.
+    post:
+      body:
+        application/json:
+          schema: !include schema/Triggered_QueryLSP.schema
+          example: !include json/Triggered_QueryLSPReq.json
+      responses: 
+        200:
+          body: 
+            application/json: 
+              example: !include json/Triggered_QueryLSPRes.json
+        400:
+          body:
+            application/json: 
+              example: !include json/error-404.json
+        500:
+          body: 
+            application/json: 
+              example: !include json/error-500.json
+       
